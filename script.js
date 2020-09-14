@@ -12,11 +12,43 @@ function showModal() {
   websiteNameEl.focus();
 }
 
-// Event listerners
+// Modal Event listerners
 modalShow.addEventListener("click", showModal);
 modalClose.addEventListener("click", () =>
   modal.classList.remove("show-modal")
 );
-modal.addEventListener("click", (e) =>
+window.addEventListener("click", (e) =>
   e.target === modal ? modal.classList.remove("show-modal") : false
 );
+
+// Validate Form
+function validate(nameValue, urlValue) {
+  const expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+  const regex = new RegExp(expression);
+  if (!nameValue || !urlValue) {
+    alert("Please submit values for both fields.");
+    return false;
+  }
+  if (!urlValue.match(regex)) {
+    alert("Please provide a valid web address.");
+    return false;
+  }
+  // Valid
+  return true;
+}
+
+// Handle data from Form
+function storeBookmark(e) {
+  e.preventDefault();
+  const nameValue = websiteNameEl.value;
+  let urlValue = websiteUrlEl.value;
+  if (!urlValue.includes("http://", "https://")) {
+    urlValue = `https://${urlValue}`;
+  }
+  if (!validate(nameValue, urlValue)) {
+    return false;
+  }
+}
+
+// Event listener
+bookmarkForm.addEventListener("submit", storeBookmark);
